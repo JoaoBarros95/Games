@@ -18,5 +18,10 @@ namespace Chess.board
             this.chessboard = chessboard;
             this.manyMovements = 0;
         }
+
+        public int Movements()
+        {
+            return manyMovements++;
+        }
     }
 }
