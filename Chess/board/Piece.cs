@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Chess.board
 {
-    class Piece
+    abstract class Piece
     {
         public Position position { get; set; }
         public Color color { get; protected set; }
@@ -23,5 +23,7 @@ namespace Chess.board
         {
             return manyMovements++;
         }
+
+        public abstract bool[,] possibleMoves();
     }
 }
