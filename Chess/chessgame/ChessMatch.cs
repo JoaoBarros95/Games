@@ -11,6 +11,8 @@ namespace Chess.chessgame
         public int round { get; private set; }
         public Color currentPlayer { get; private set; }
         public bool finished { get; private set; }
+        private HashSet<Piece> pieces;
+        private HashSet<Piece> captured;
 
         public ChessMatch()
         {
@@ -18,6 +20,8 @@ namespace Chess.chessgame
             round = 1;
             currentPlayer = Color.White;
             finished = false;
+            pieces = new HashSet<Piece>();
+            captured = new HashSet<Piece>();
             putPieces();
         }
 
@@ -27,6 +31,10 @@ namespace Chess.chessgame
             p.Movements();
             Piece capturedPiece = chessboard.removePiece(destiny);
             chessboard.putPiece(p, destiny);
+            if (capturedPiece != null)
+            {
+                captured.Add(capturedPiece);
+            }
         }
 
         public void performMove(Position origin, Position destiny)
@@ -56,7 +64,7 @@ namespace Chess.chessgame
         {
             if (!chessboard.piece(origin).canMoveTo(destiny))
             {
-                throw new BoardException("Invalid position!");
+                throw new BoardException("The piece can not be moved to that destination!");
             }
         }
 
@@ -72,15 +80,48 @@ namespace Chess.chessgame
             }
         }
 
-        public void putPieces()
-        {            
-            chessboard.putPiece(new King(chessboard, Color.Black), new ChessPosition('e', 1).toPosition());
-            chessboard.putPiece(new Rook(chessboard, Color.Black), new ChessPosition('a', 1).toPosition());
-            chessboard.putPiece(new Rook(chessboard, Color.Black), new ChessPosition('h', 1).toPosition());
+        public HashSet<Piece> capturedPieces(Color color)
+        {
+            HashSet<Piece> aux = new HashSet<Piece>();
+            foreach(Piece x in captured)
+            {
+                if (x.color == color)
+                {
+                    aux.Add(x);
+                }
+            }
+            return aux;
+        }
 
-            chessboard.putPiece(new King(chessboard, Color.White), new ChessPosition('d', 8).toPosition());
-            chessboard.putPiece(new Rook(chessboard, Color.White), new ChessPosition('a', 8).toPosition());
-            chessboard.putPiece(new Rook(chessboard, Color.White), new ChessPosition('h', 8).toPosition());
+        public HashSet<Piece> piecesInGame(Color color)
+        {
+            HashSet<Piece> aux = new HashSet<Piece>();
+            foreach (Piece x in pieces)
+            {
+                if (x.color == color)
+                {
+                    aux.Add(x);
+                }
+            }
+            aux.ExceptWith(capturedPieces(color));
+            return aux;
+        }
+
+        public void putNewPiece(char column, int line, Piece piece)
+        {
+            chessboard.putPiece(piece, new ChessPosition(column, line).toPosition());
+            pieces.Add(piece);
+        }
+
+        public void putPieces()
+        {
+            putNewPiece('e', 1, new King(chessboard, Color.Black));
+            putNewPiece('a', 1, new Rook(chessboard, Color.Black));
+            putNewPiece('h', 1, new Rook(chessboard, Color.Black));
+
+            putNewPiece('d', 8, new King(chessboard, Color.White));
+            putNewPiece('a', 8, new Rook(chessboard, Color.White));
+            putNewPiece('h', 8, new Rook(chessboard, Color.White));
         }
     }
 }
