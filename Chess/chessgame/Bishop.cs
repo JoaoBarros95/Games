@@ -34,8 +34,7 @@ namespace Chess.chessgame
                 {
                     break;
                 }
-                pos.line = pos.line - 1;
-                pos.column = pos.column + 1;
+                pos.setValue(pos.line - 1, pos.column + 1);
             }
 
             //Right and Down
@@ -47,8 +46,7 @@ namespace Chess.chessgame
                 {
                     break;
                 }
-                pos.line = pos.line + 1;
-                pos.column = pos.column + 1;
+                pos.setValue(pos.line + 1, pos.column + 1);
             }
 
             //Down and left
@@ -60,21 +58,19 @@ namespace Chess.chessgame
                 {
                     break;
                 }
-                pos.line = pos.line + 1;
-                pos.column = pos.column - 1;
+                pos.setValue(pos.line + 1, pos.column - 1);
             }
 
             //Left and up
-            pos.setValue(position.line, position.column - 1);
+            pos.setValue(position.line - 1, position.column - 1);
             while (chessboard.validPosition(pos) && canMove(pos))
             {
-                mat[pos.line - 1, pos.column] = true;
+                mat[pos.line, pos.column] = true;
                 if (chessboard.piece(pos) != null && chessboard.piece(pos).color != color)
                 {
                     break;
                 }
-                pos.line = pos.line -1;
-                pos.column = pos.column - 1;
+                pos.setValue(pos.line - 1, pos.column - 1);
             }
 
             return mat;

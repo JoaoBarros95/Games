@@ -7,23 +7,19 @@ namespace Chess.chessgame
 {
     class Pawn : Piece
     {
-        public Pawn(Board chessboard, Color color) : base(chessboard, color) { }
+        ChessMatch match;
+
+        public Pawn(Board chessboard, Color color, ChessMatch match) : base(chessboard, color) { this.match = match; }
 
         public override string ToString()
         {
             return "P";
         }
 
-        private bool canMove(Position pos)
-        {
-            Piece p = chessboard.piece(pos);
-            return p == null || p.color != color;
-        }
-
         private bool opposingPiece(Position pos)
         {
             Piece p = chessboard.piece(pos);
-            return chessboard != null && p.color != color;
+            return p != null && p.color != color;
         }
 
         private bool free(Position pos)
@@ -38,7 +34,7 @@ namespace Chess.chessgame
             Position pos = new Position(0, 0);
 
             
-            if (color == Color.White)
+            if (color == Color.Black)
             {
                 pos.setValue(position.line - 1, position.column);
                 if (chessboard.validPosition(pos) && free(pos))
@@ -59,6 +55,24 @@ namespace Chess.chessgame
                 if(chessboard.validPosition(pos) && opposingPiece(pos))
                 {
                     mat[pos.line, pos.column] = true;
+                }
+                //En Passant
+                if (position.line == 3)
+                {
+                    Position left = new Position(position.line, position.column - 1);
+                    if (chessboard.validPosition(left) && opposingPiece(left) && chessboard.piece(left) == match.vulnerableToPassant)
+                    {
+                        mat[left.line - 1, left.column] = true;
+                    }
+                }
+
+                if (position.line == 3)
+                {
+                    Position right = new Position(position.line, position.column - 1);
+                    if (chessboard.validPosition(right) && opposingPiece(right) && chessboard.piece(right) == match.vulnerableToPassant)
+                    {
+                        mat[right.line - 1, right.column] = true;
+                    }
                 }
             }
             else
@@ -82,6 +96,24 @@ namespace Chess.chessgame
                 if (chessboard.validPosition(pos) && opposingPiece(pos))
                 {
                     mat[pos.line, pos.column] = true;
+                }
+                //En Passant
+                if (position.line == 4)
+                {
+                    Position left = new Position(position.line, position.column + 1);
+                    if (chessboard.validPosition(left) && opposingPiece(left) && chessboard.piece(left) == match.vulnerableToPassant)
+                    {
+                        mat[left.line + 1, left.column] = true;
+                    }
+                }
+
+                if (position.line == 4)
+                {
+                    Position right = new Position(position.line, position.column + 1);
+                    if (chessboard.validPosition(right) && opposingPiece(right) && chessboard.piece(right) == match.vulnerableToPassant)
+                    {
+                        mat[right.line + 1, right.column] = true;
+                    }
                 }
             }
             return mat;
