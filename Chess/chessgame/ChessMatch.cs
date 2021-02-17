@@ -55,18 +55,19 @@ namespace Chess.chessgame
         public void performMove(Position origin, Position destiny)
         {
             Piece capturedPiece = playMove(origin, destiny);
-
             if (inCheck(currentPlayer))
             {
                 undoMove(origin, destiny, capturedPiece);
                 throw new BoardException("You can't put yourself in check");
             }
-            if (inCheck(opponent(currentPlayer)))
+            if (inCheck(opponent(currentPlayer))) { check = true; }
+
+            if (testCheckmate(opponent(currentPlayer))) { finished = true; }
+            else
             {
-                check = true;
+                round++;
+                changePlayer();
             }
-            round++;
-            changePlayer();
         }
 
         public void validateOriginPosition(Position pos)
@@ -155,6 +156,32 @@ namespace Chess.chessgame
             }
             return null;
         }      
+
+        public bool testCheckmate(Color color)
+        {
+            if (!inCheck(color)) { return false; }
+
+            foreach(Piece p in piecesInGame(color))
+            {
+                bool[,] mat = p.possibleMoves();
+                for (int i = 0; i < chessboard.lines; i++)
+                {
+                    for (int j = 0; j < chessboard.columns; j++)
+                    {
+                        if (mat[i, j])
+                        {
+                            Position origin = p.position;
+                            Position destiny = new Position(i, j);
+                            Piece capturedPiece = playMove(origin, destiny);
+                            bool testCheck = inCheck(color);
+                            undoMove(origin, destiny, capturedPiece);
+                            if (!testCheck) { return false; }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
         
         public bool inCheck (Color color)
         {
@@ -183,8 +210,8 @@ namespace Chess.chessgame
         public void putPieces()
         {
             putNewPiece('e', 1, new King(chessboard, Color.Black));
-            putNewPiece('a', 1, new Rook(chessboard, Color.Black));
-            putNewPiece('h', 1, new Rook(chessboard, Color.Black));
+            //putNewPiece('a', 1, new Rook(chessboard, Color.Black));
+            //putNewPiece('h', 1, new Rook(chessboard, Color.Black));
 
             putNewPiece('d', 8, new King(chessboard, Color.White));
             putNewPiece('a', 8, new Rook(chessboard, Color.White));
