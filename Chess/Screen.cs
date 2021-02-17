@@ -15,6 +15,7 @@ namespace Chess
             printCapturedPieces(match);
             Console.WriteLine("Round: " + match.round);
             Console.WriteLine("Waiting for " + match.currentPlayer + " to play");
+            if (match.check) { Console.WriteLine("CHECK!"); }
         }
 
         public static void printCapturedPieces(ChessMatch match)

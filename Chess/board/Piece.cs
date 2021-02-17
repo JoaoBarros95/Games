@@ -24,6 +24,11 @@ namespace Chess.board
             return manyMovements++;
         }
 
+        public int undoMovements()
+        {
+            return manyMovements--;
+        }
+
         public bool possibleExistingMoves()
         {
             bool[,] mat = possibleMoves();

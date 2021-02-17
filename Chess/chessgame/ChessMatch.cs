@@ -13,6 +13,7 @@ namespace Chess.chessgame
         public bool finished { get; private set; }
         private HashSet<Piece> pieces;
         private HashSet<Piece> captured;
+        public bool check { get; private set; }
 
         public ChessMatch()
         {
@@ -20,12 +21,13 @@ namespace Chess.chessgame
             round = 1;
             currentPlayer = Color.White;
             finished = false;
+            check = false;
             pieces = new HashSet<Piece>();
             captured = new HashSet<Piece>();
             putPieces();
         }
 
-        public void playMove(Position origin, Position destiny)
+        public Piece playMove(Position origin, Position destiny)
         {
             Piece p = chessboard.removePiece(origin);
             p.Movements();
@@ -35,11 +37,34 @@ namespace Chess.chessgame
             {
                 captured.Add(capturedPiece);
             }
+            return capturedPiece;
+        }
+
+        public void undoMove(Position origin, Position destiny, Piece capturedpiece)
+        {
+            Piece p = chessboard.removePiece(destiny);
+            p.undoMovements();
+            if (capturedpiece != null)
+            {
+                chessboard.putPiece(capturedpiece, destiny);
+                captured.Remove(capturedpiece);
+            }
+            chessboard.putPiece(p, origin);
         }
 
         public void performMove(Position origin, Position destiny)
         {
-            playMove(origin, destiny);
+            Piece capturedPiece = playMove(origin, destiny);
+
+            if (inCheck(currentPlayer))
+            {
+                undoMove(origin, destiny, capturedPiece);
+                throw new BoardException("You can't put yourself in check");
+            }
+            if (inCheck(opponent(currentPlayer)))
+            {
+                check = true;
+            }
             round++;
             changePlayer();
         }
@@ -105,6 +130,48 @@ namespace Chess.chessgame
             }
             aux.ExceptWith(capturedPieces(color));
             return aux;
+        }
+
+        private Color opponent(Color color)
+        {
+            if (color == Color.White)
+            {
+                return Color.Black;
+            }
+            else
+            {
+                return Color.White;
+            }
+        }
+
+        private Piece king (Color color)
+        {
+            foreach (Piece x in piecesInGame(color))
+            {
+                if (x is King)
+                {
+                    return x;
+                }
+            }
+            return null;
+        }      
+        
+        public bool inCheck (Color color)
+        {
+            Piece K = king(color);
+            if (K == null)
+            {
+                throw new BoardException("Game over");
+            }
+            foreach (Piece x in piecesInGame(opponent(color)))
+            {
+                bool[,]  mat= x.possibleMoves();
+                if (mat[K.position.line, K.position.column])
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void putNewPiece(char column, int line, Piece piece)
