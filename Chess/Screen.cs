@@ -23,7 +23,7 @@ namespace Chess
             else
             {
                 Console.WriteLine("CHECKMATE");
-                Console.WriteLine(match.currentPlayer + "Player win!");
+                Console.WriteLine(match.currentPlayer + " player win!");
             }
         }
 

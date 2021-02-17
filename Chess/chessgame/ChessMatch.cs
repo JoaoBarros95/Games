@@ -208,14 +208,41 @@ namespace Chess.chessgame
         }
 
         public void putPieces()
-        {
+        {            
+            putNewPiece('a', 1, new Rook(chessboard, Color.Black));
+            putNewPiece('b', 1, new Knight(chessboard, Color.Black));
+            putNewPiece('c', 1, new Bishop(chessboard, Color.Black));
+            putNewPiece('d', 1, new Queen(chessboard, Color.Black));
             putNewPiece('e', 1, new King(chessboard, Color.Black));
-            //putNewPiece('a', 1, new Rook(chessboard, Color.Black));
-            //putNewPiece('h', 1, new Rook(chessboard, Color.Black));
+            putNewPiece('f', 1, new Bishop(chessboard, Color.Black));
+            putNewPiece('g', 1, new Knight(chessboard, Color.Black));
+            putNewPiece('h', 1, new Rook(chessboard, Color.Black));
+            putNewPiece('a', 2, new Pawn(chessboard, Color.Black));
+            putNewPiece('b', 2, new Pawn(chessboard, Color.Black));
+            putNewPiece('c', 2, new Pawn(chessboard, Color.Black));
+            putNewPiece('d', 2, new Pawn(chessboard, Color.Black));
+            putNewPiece('e', 2, new Pawn(chessboard, Color.Black));
+            putNewPiece('f', 2, new Pawn(chessboard, Color.Black));
+            putNewPiece('g', 2, new Pawn(chessboard, Color.Black));
+            putNewPiece('h', 2, new Pawn(chessboard, Color.Black));
 
-            putNewPiece('d', 8, new King(chessboard, Color.White));
+
             putNewPiece('a', 8, new Rook(chessboard, Color.White));
+            putNewPiece('b', 8, new Knight(chessboard, Color.White));
+            putNewPiece('c', 8, new Bishop(chessboard, Color.White));
+            putNewPiece('d', 8, new King(chessboard, Color.White));
+            putNewPiece('e', 8, new Queen(chessboard, Color.White));
+            putNewPiece('f', 8, new Bishop(chessboard, Color.White));
+            putNewPiece('g', 8, new Knight(chessboard, Color.White));
             putNewPiece('h', 8, new Rook(chessboard, Color.White));
+            putNewPiece('a', 7, new Pawn(chessboard, Color.White));
+            putNewPiece('b', 7, new Pawn(chessboard, Color.White));
+            putNewPiece('c', 7, new Pawn(chessboard, Color.White));
+            putNewPiece('d', 7, new Pawn(chessboard, Color.White));
+            putNewPiece('e', 7, new Pawn(chessboard, Color.White));
+            putNewPiece('f', 7, new Pawn(chessboard, Color.White));
+            putNewPiece('g', 7, new Pawn(chessboard, Color.White));
+            putNewPiece('h', 7, new Pawn(chessboard, Color.White));
         }
     }
 }
