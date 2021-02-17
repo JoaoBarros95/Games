@@ -130,21 +130,41 @@ namespace Chess.chessgame
         public void performMove(Position origin, Position destiny)
         {
             Piece capturedPiece = playMove(origin, destiny);
+            Piece p = chessboard.piece(destiny);
+
             if (inCheck(currentPlayer))
             {
                 undoMove(origin, destiny, capturedPiece);
                 throw new BoardException("You can't put yourself in check");
             }
-            if (inCheck(opponent(currentPlayer))) { check = true; }
+            //Promotion
+            if (p is Pawn)
+            {
+                if (p.color == Color.Black && destiny.line == 0 || p.color == Color.White && destiny.line == 7)
+                {
+                    p = chessboard.removePiece(destiny);
+                    pieces.Remove(p);
+                    Piece queen = new Queen(chessboard, p.color);
+                    chessboard.putPiece(queen, destiny);
+                    pieces.Add(queen);
+                }
+            }
 
-            if (testCheckmate(opponent(currentPlayer))) { finished = true; }
+            if (inCheck(opponent(currentPlayer)))
+            {
+                check = true;
+            }
+
+            if (testCheckmate(opponent(currentPlayer)))
+            {
+                finished = true;
+            }
             else
             {
                 round++;
                 changePlayer();
             }
             //En Passant
-            Piece p = chessboard.piece(destiny);
             if (p is Pawn && (destiny.line == origin.line + 2 || destiny.line == origin.line - 2))
             {
                 vulnerableToPassant = p;

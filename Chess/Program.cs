@@ -24,7 +24,6 @@ namespace Chess
                         match.validateOriginPosition(origin);
 
                         bool[,] possiblePositions = match.chessboard.piece(origin).possibleMoves();
-                        Console.Clear();
                         Screen.printBoard(match.chessboard, possiblePositions);
 
                         Console.Write("Destiny: ");
